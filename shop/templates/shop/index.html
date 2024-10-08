@@ -52,12 +52,14 @@ justify-content: center;
 {% block body%}
 <div class="container my-5">
   <!-- Carousel Section -->
-  <div id="demo" class="carousel slide" data-bs-ride="carousel">
+  {% for product, range, nSlides in allProds %}
+  <h1>{{product.0.category}}</h1>
+  <div id="demo{{forloop.counter}}" class="carousel slide" data-bs-ride="carousel">
     <!-- Indicators -->
     <ul class="carousel-indicators">
-      <li data-bs-target="#demo" data-bs-slide-to="0" class="active"></li>
+      <li data-bs-target="#demo{{forloop.counter}}" data-bs-slide-to="0" class="active"></li>
       {% for i in range %}
-      <li data-bs-target="#demo" data-bs-slide-to="{{i}}"></li>
+      <li data-bs-target="#demo{{forloop.counter}}" data-bs-slide-to="{{i}}"></li>
       {% endfor %}
     </ul>
 
@@ -66,19 +68,7 @@ justify-content: center;
 
       <div class="carousel-item active">
         <div class="row">
-          <!-- <div class="col-md-3">
-            <div class="card" style="width: 18rem;">
-              <img src='/media/{{product.0.image}}' class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">{{product.0.product_name}}</h5>
-                <p class="card-text">{{product.0.desc}}</p>
-                <a href="#" class="btn btn-primary">Add to Cart</a>
-              </div>
-            </div>
-          </div> -->
 
-
-          
           {% for prod in product%}
           <div class="col-md-3">
             <div class="card" style="width: 18rem;">
@@ -98,7 +88,8 @@ justify-content: center;
       <div class="carousel-item">
         <div class="row">
           {%endif%}
-          {% endfor %}  
+
+        {% endfor %}
         </div>
       </div>
 
@@ -106,13 +97,14 @@ justify-content: center;
     </div>
 
     <!-- Left and Right controls -->
-    <a class="carousel-control-prev" href="#demo" role="button" data-bs-slide="prev">
+    <a class="carousel-control-prev" href="#demo{{forloop.counter}}" role="button" data-bs-slide="prev">
       <span class="carousel-control-prev-icon"></span>
     </a>
 
-    <a class="carousel-control-next" href="#demo" role="button" data-bs-slide="next">
+    <a class="carousel-control-next" href="#demo{{forloop.counter}}" role="button" data-bs-slide="next">
       <span class="carousel-control-next-icon"></span>
     </a>
   </div>
+  {% endfor %}
 </div>
 {% endblock %}
