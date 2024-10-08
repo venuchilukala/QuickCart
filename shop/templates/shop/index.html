@@ -4,45 +4,49 @@
 {%block title%}Quick Cart{% endblock %}
 
 {%block css%}
-.col-md-3 img {
-width: 100%;
-height: 190px;
-}
-.col-md-3{
-padding-left: 0;
-padding-right: 0;
-width: 21%;
-}
+<style>
+  .col-md-3 img {
+    width: 100%;
+    height: 190px;
+  }
 
-body .carousel-indicators li {
-background-color: blue;
-list-style: none;
-}
+  .col-md-3 {
+    padding-left: 0;
+    padding-right: 0;
+    width: 21%;
+  }
 
-.carousel-indicators .active {
-background-color: blue;
-}
+  body .carousel-indicators li {
+    background-color: blue;
+    list-style: none;
+  }
 
-body .carousel-control-prev-icon,
-body .carousel-control-next-icon {
-background-color: blue;
-}
+  .carousel-indicators .active {
+    background-color: blue;
+  }
 
-body .carousel-control-next{
-justify-content: flex-end;
-}
-body .carousel-control-prev{
-justify-content: flex-start;
-}
+  body .carousel-control-prev-icon,
+  body .carousel-control-next-icon {
+    background-color: blue;
+  }
 
-body .no-padding {
-padding-left: 0;
-padding-right: 0;
-}
+  body .carousel-control-next {
+    justify-content: flex-end;
+  }
 
-.row{
-justify-content: center;
-}
+  body .carousel-control-prev {
+    justify-content: flex-start;
+  }
+
+  body .no-padding {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .row {
+    justify-content: center;
+  }
+</style>
 {% endblock %}
 
 
@@ -76,7 +80,7 @@ justify-content: center;
               <div class="card-body">
                 <h5 class="card-title">{{prod.product_name}}</h5>
                 <p class="card-text">{{prod.desc}}</p>
-                <a href="#" class="btn btn-primary">Add to Cart</a>
+                <button id="pr{{prod.id}}" class="btn btn-primary cart">Add to Cart</button>
               </div>
             </div>
           </div>
@@ -89,7 +93,7 @@ justify-content: center;
         <div class="row">
           {%endif%}
 
-        {% endfor %}
+          {% endfor %}
         </div>
       </div>
 
@@ -107,4 +111,40 @@ justify-content: center;
   </div>
   {% endfor %}
 </div>
+{% endblock %}
+
+
+{% block js %} 
+<script>
+  console.log('Working')
+
+  if(localStorage.getItem('cart') == null){
+    var cart = {}
+  }
+  else{
+    cart = JSON.parse(localStorage.getItem('cart'))
+  }
+
+  $('.cart').click(function(){
+    console.log('Clicked')
+    var idStr = this.id.toString()
+    console.log(idStr)
+
+    if(cart[idStr] != undefined){
+      cart[idStr] = cart[idStr] + 1
+    }
+    else{
+      cart[idStr] = 1
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart))
+    console.log(cart)
+  });
+
+  // document.querySelector('.cart').addEventListener('click', ()=>{
+  //   console.log('clicked')
+  // } )
+
+</script>
+
 {% endblock %}
