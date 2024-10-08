@@ -2,4 +2,62 @@
 
 {% block title %} Product View {% endblock %}
 
-{% block body %} To view Product {% endblock %}
+{% block body %} 
+
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="/media/{{product.image}}" alt="">
+        </div>
+        <div class="col-md-6">
+            <h3>{{product.product_name}}</h3>
+            <p>{{product.desc}}</p>
+            <strong>MRP : {{product.price}}/-</strong>
+            <div>
+                <button id="pr{{product.id}}" class="btn btn-primary cart">Add to Cart</button>
+                <button class="btn btn-success">Buy Now</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+
+{% block js %} 
+<script>
+  console.log('Working')
+
+  if(localStorage.getItem('cart') == null){
+    var cart = {}
+  }
+  else{
+    cart = JSON.parse(localStorage.getItem('cart'))
+    document.getElementById('cart').innerHTML = Object.keys(cart).length
+  }
+
+  $('.cart').click(function(){
+    console.log('Clicked')
+    var idStr = this.id.toString()
+    console.log(idStr)
+
+    if(cart[idStr] != undefined){
+      cart[idStr] = cart[idStr] + 1
+    }
+    else{
+      cart[idStr] = 1
+    }
+
+    localStorage.setItem('cart', JSON.stringify(cart))
+    document.getElementById('cart').innerHTML = Object.keys(cart).length
+    console.log(cart)
+  });
+
+  // document.querySelector('.cart').addEventListener('click', ()=>{
+  //   console.log('clicked')
+  // } )
+
+</script>
+{% endblock %}

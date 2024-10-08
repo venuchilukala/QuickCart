@@ -46,13 +46,6 @@
   .row {
     justify-content: center;
   }
-
-  #cart{
-    background-color: #ffffff;
-    color: #565553;
-    padding: 2px 9px;
-    border-radius: 5px;
-  }
   h3{
     margin: 20px 0;
   }
@@ -89,8 +82,9 @@
               <img src="/media/{{prod.image}}" class="card-img-top" alt="...">
               <div class="card-body">
                 <h5 class="card-title">{{prod.product_name}}</h5>
-                <p class="card-text">{{prod.desc}}</p>
+                <p class="card-text">{{prod.desc|slice:'0:60'}}...</p>
                 <button id="pr{{prod.id}}" class="btn btn-primary cart">Add to Cart</button>
+                <a href="/shop/products/{{prod.id}}" id="pv{{prod.id}}"><button class="btn btn-primary cart">Preview</button></a>
               </div>
             </div>
           </div>
@@ -158,5 +152,4 @@
   // } )
 
 </script>
-
 {% endblock %}
