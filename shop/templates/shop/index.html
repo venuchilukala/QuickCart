@@ -46,6 +46,16 @@
   .row {
     justify-content: center;
   }
+
+  #cart{
+    background-color: #ffffff;
+    color: #565553;
+    padding: 2px 9px;
+    border-radius: 5px;
+  }
+  h3{
+    margin: 20px 0;
+  }
 </style>
 {% endblock %}
 
@@ -57,7 +67,7 @@
 <div class="container my-5">
   <!-- Carousel Section -->
   {% for product, range, nSlides in allProds %}
-  <h1>{{product.0.category}}</h1>
+  <h3>Flash Sale on {{product.0.category}} - Recommended Items 4U</h3>
   <div id="demo{{forloop.counter}}" class="carousel slide" data-bs-ride="carousel">
     <!-- Indicators -->
     <ul class="carousel-indicators">
@@ -123,6 +133,7 @@
   }
   else{
     cart = JSON.parse(localStorage.getItem('cart'))
+    document.getElementById('cart').innerHTML = Object.keys(cart).length
   }
 
   $('.cart').click(function(){
@@ -138,6 +149,7 @@
     }
 
     localStorage.setItem('cart', JSON.stringify(cart))
+    document.getElementById('cart').innerHTML = Object.keys(cart).length
     console.log(cart)
   });
 
