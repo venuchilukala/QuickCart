@@ -83,8 +83,8 @@
               <div class="card-body">
                 <h5 class="card-title">{{prod.product_name}}</h5>
                 <p class="card-text">{{prod.desc|slice:'0:60'}}...</p>
-                <button id="pr{{prod.id}}" class="btn btn-primary cart">Add to Cart</button>
-                <a href="/shop/products/{{prod.id}}" id="pv{{prod.id}}"><button class="btn btn-primary cart">Preview</button></a>
+                <button id="pr{{prod.product_id}}" class="btn btn-primary cart">Add to Cart</button>
+                <a href="/shop/products/{{prod.product_id}}" id="pv{{prod.product_id}}"><button class="btn btn-primary cart">Preview</button></a>
               </div>
             </div>
           </div>

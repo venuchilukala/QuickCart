@@ -21,7 +21,7 @@ class Product(models.Model):
 class Contact(models.Model):
     msg_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
-    email = models.CharField(max_length=70, unique=True, default='')  # Set email as unique
+    email = models.CharField(max_length=70, default='')
     phone = models.CharField(max_length=70, default='')
     desc = models.TextField()
 

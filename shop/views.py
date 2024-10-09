@@ -21,7 +21,7 @@ def index(request):
     
     allProds = []
     #Getting all names of categories
-    catProds = Product.objects.values('category', 'id')
+    catProds = Product.objects.values('category', 'product_id')
     #Getting unique names of categories
     cats = {item['category']  for item in catProds}
     
@@ -58,7 +58,7 @@ def search(request):
     return render(request, 'shop/search.html')
 
 def productView(request, myid):
-    product = Product.objects.filter(id = myid)
+    product = Product.objects.filter(product_id = myid)
     
     return render(request, 'shop/productView.html', {'product' : product[0]})
 
