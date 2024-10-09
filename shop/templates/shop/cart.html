@@ -1,0 +1,97 @@
+{% extends 'shop/basic.html' %}
+
+{% block title %}Cart{% endblock %}
+
+{% block css %}
+<style>
+    .cart-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 5px;
+    }
+</style>
+{% endblock %}
+
+
+{% block body %}
+<div id="cartItems">
+    <h2>Your Cart</h2>
+    <ul id="cartItemsContainer"></ul>
+    <p id="emptyMessage" style="display:none;">No items in your cart.</p>
+</div>
+
+<!-- Hidden data to use in JS -->
+<div id="productsData" style="display:none;">
+    {% for product in products %}
+    <span data-product-id="{{ product.product_id }}" data-product-name="{{ product.product_name }}"
+        data-product-price="{{ product.price }}" data-product-image="{{product.image}}"
+        data-product-discount_price="{{product.discount_price}}"></span>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    function getCartFromLocalStorage() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || {};
+        return cart;
+    }
+
+    // Parse product data from the hidden div
+    function getAllProducts() {
+        let products = [];
+        const productElements = document.querySelectorAll('#productsData span');
+        productElements.forEach(productEl => {
+            products.push({
+                product_id: productEl.getAttribute('data-product-id'),
+                product_name: productEl.getAttribute('data-product-name'),
+                price: productEl.getAttribute('data-product-price'),
+                discount_price: productEl.getAttribute('data-product-discount_price'),
+                image: productEl.getAttribute('data-product-image')
+            });
+        });
+        return products;
+    }
+
+
+    // Render the cart items dynamically
+    function renderCartItems() {
+        const cart = getCartFromLocalStorage();
+        const allProducts = getAllProducts();
+        const cartItemsContainer = document.getElementById('cartItemsContainer');
+        cartItemsContainer.innerHTML = '';
+
+        console.log(allProducts)
+        console.log(cart)
+
+        let cartHasItems = false;
+
+        for (let productId in cart) {
+            qty = cart[productId]
+            const product = allProducts.find(p => p.product_id === productId.slice(2,));
+            console.log(product)
+            if (product) {
+                cartHasItems = true;
+                prodId = `pr${productId}`
+                const cartItemHTML = `
+          <li class="cart-item d-flex gap-5">
+            <img src="/media/${product.image}" alt="${product.product_name}" class="cart-image"/>
+            <div>    
+                <h3>${product.product_name}</h3>
+                <p>Price: $${product.price}</p>
+                <p>Quantity: ${cart[productId]}</p>
+            </div>
+          </li>
+        `;
+                cartItemsContainer.innerHTML += cartItemHTML;
+            }
+        }
+
+        document.getElementById('emptyMessage').style.display = cartHasItems ? 'none' : 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        renderCartItems();
+    });
+</script>
+{% endblock %}

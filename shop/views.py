@@ -62,5 +62,10 @@ def productView(request, myid):
     
     return render(request, 'shop/productView.html', {'product' : product[0]})
 
+def cart(request):
+    products = Product.objects.all()
+    params = {'products' : products,}
+    return render(request, 'shop/cart.html', params)
+
 def checkout(request):
     return render(request, 'shop/checkout.html')

@@ -9,13 +9,14 @@
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    {% block css %}
-    {% endblock %}
+  {% block css %}
+  {% endblock %}
 
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- fixed-top -->
     <div class="container-fluid">
       <a class="navbar-brand" href="#">Quick Cart</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -36,14 +37,20 @@
           <li class="nav-item">
             <a class="nav-link" href="/shop/tracker">Tracker</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/shop/checkout">checkout</a>
+          </li>
         </ul>
         <form class="d-flex" role="search">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
-        <button id="popcart" type="button" class="btn btn-secondary mx-3" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Bottom popover">
-          Cart <span id="cart">0</span>
-        </button>
+        <a href="/shop/cart">
+          <button id="popcart" type="button" class="btn btn-secondary mx-3" data-bs-container="body"
+            data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Bottom popover">
+            Cart <span id="cart">0</span>
+          </button>
+        </a>
       </div>
     </div>
   </nav>
@@ -55,13 +62,13 @@
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
 
-    <script>
-      cart = JSON.parse(localStorage.getItem('cart'))
-      document.getElementById('cart').innerHTML = Object.keys(cart).length
-    </script>
-    {% block js %}
- 
-    {% endblock %}
+  <script>
+    cart = JSON.parse(localStorage.getItem('cart'))
+    document.getElementById('cart').innerHTML = Object.keys(cart).length
+  </script>
+  {% block js %}
+
+  {% endblock %}
 </body>
 
 </html>
