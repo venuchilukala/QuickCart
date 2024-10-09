@@ -46,7 +46,8 @@
   .row {
     justify-content: center;
   }
-  h3{
+
+  h3 {
     margin: 20px 0;
   }
 </style>
@@ -83,8 +84,11 @@
               <div class="card-body">
                 <h5 class="card-title">{{prod.product_name}}</h5>
                 <p class="card-text">{{prod.desc|slice:'0:60'}}...</p>
-                <button id="pr{{prod.product_id}}" class="btn btn-primary cart">Add to Cart</button>
-                <a href="/shop/products/{{prod.product_id}}" id="pv{{prod.product_id}}"><button class="btn btn-primary cart">Preview</button></a>
+                <span id="divpr{{prod.product_id}}" class="divpr">
+                  <button id="pr{{prod.product_id}}" class="btn btn-primary cart">Add to Cart</button>
+                </span>
+                <a href="/shop/products/{{prod.product_id}}" id="pv{{prod.product_id}}"><button
+                    class="btn btn-primary cart">Preview</button></a>
               </div>
             </div>
           </div>
@@ -118,38 +122,62 @@
 {% endblock %}
 
 
-{% block js %} 
+{% block js %}
 <script>
-  console.log('Working')
-
-  if(localStorage.getItem('cart') == null){
-    var cart = {}
+  //Get Cart from localStorage
+  let cart;
+  if (localStorage.getItem('cart') == null) {
+    cart = {}
   }
-  else{
+  else {
     cart = JSON.parse(localStorage.getItem('cart'))
     document.getElementById('cart').innerHTML = Object.keys(cart).length
+    updateCart(cart)
   }
 
-  $('.cart').click(function(){
+  $('.cart').click(function () {
     console.log('Clicked')
     var idStr = this.id.toString()
     console.log(idStr)
-
-    if(cart[idStr] != undefined){
+    if (cart[idStr] != undefined) {
       cart[idStr] = cart[idStr] + 1
     }
-    else{
+    else {
       cart[idStr] = 1
     }
-
-    localStorage.setItem('cart', JSON.stringify(cart))
-    document.getElementById('cart').innerHTML = Object.keys(cart).length
-    console.log(cart)
+    updateCart(cart)
   });
 
-  // document.querySelector('.cart').addEventListener('click', ()=>{
-  //   console.log('clicked')
-  // } )
+  //Update the cart on every click
+  function updateCart(cart) {
+    console.log(cart)
+    for (var item in cart) {
+      document.getElementById('div' + item).innerHTML = "<button id='minus" + item + "' class='btn btn-primary minus'>-</button> <span id='val" + item + "'>" + cart[item] + "</span><button id='plus" + item + "' class='btn btn-primary plus'>+</button>";
+    }
+    localStorage.setItem('cart', JSON.stringify(cart))
+    document.getElementById('cart').innerHTML = Object.keys(cart).length
+  }
 
+  //Functionality for increment and decrement
+  $('.divpr').on('click','button.minus', function(){
+    console.log('Minus Clicked')
+    a = this.id.slice(5,)
+    cart[a] = cart[a] - 1 
+    cart[a] = Math.max(0, cart[a])
+    document.getElementById('val' + a).innerHTML = cart[a]
+    updateCart(cart)
+    if(cart[a] == 0){
+      document.getElementById('div' + a).innerHTML = `<button id="pr${a}" class="btn btn-primary cart">Add to Cart</button>`
+    }
+  });
+  
+  $('.divpr').on('click','button.plus', function(){
+    console.log('Plus Clicked')
+    a = this.id.slice(4,)
+    cart[a] = cart[a] + 1 
+    document.getElementById('val' + a).innerHTML = cart[a]
+    updateCart(cart)
+  });
+ 
 </script>
 {% endblock %}
