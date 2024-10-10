@@ -1,24 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Product, Contact, Orders
+from .models import Product, Contact, Orders, OrderUpdate
 from math import ceil
+import json
 
 # Create your views here.
 
-def index(request):
-    # products = Product.objects.all()
-    # n = len(products)
-    # nSlides = n//4 + ceil((n/4)-(n//4))
-    
-    # params = {
-    #     'no_of_slides' : nSlides,
-    #     'product' : products,
-    #     'range' : range(1, nSlides)
-    # }
-    
-    # allProds = [[products, range(1, nSlides), nSlides],
-    #             [products, range(1, nSlides), nSlides]]
-    
+def index(request):    
     allProds = []
     #Getting all names of categories
     catProds = Product.objects.values('category', 'product_id')
@@ -37,8 +25,10 @@ def index(request):
     }
     return render(request, 'shop/index.html', params)
 
+
 def about(request):
     return render(request, 'shop/about.html')
+
 
 def contact(request):
     if request.method == 'POST': 
@@ -51,11 +41,9 @@ def contact(request):
         contact.save()
     return render(request, 'shop/contact.html')
 
-def tracker(request):
-    return render(request, 'shop/tracker.html')
-
 def search(request):
     return render(request, 'shop/search.html')
+
 
 def productView(request, myid):
     product = Product.objects.filter(product_id = myid)
@@ -79,8 +67,12 @@ def checkout(request):
         state = request.POST.get('state', '')
         zip_code = request.POST.get('zipcode', '')
         
+        #updating order along with order update
         order = Orders(items_json=items_json, name=name, email=email, phone=phone, address=address1, address_2 = address2, state=state, city=city, zip_code=zip_code)
         order.save()
+        #updating order here
+        update = OrderUpdate(order_id=order.order_id, update_desc='The order has been placed')
+        update.save()
         thank = True
         id = order.order_id
         return render(request, 'shop/checkout.html', {'thank':thank, 'id':id})
@@ -88,3 +80,30 @@ def checkout(request):
     products = Product.objects.all()
     params = {'products' : products,}
     return render(request, 'shop/checkout.html', params)
+
+
+def tracker(request):
+    if request.method == 'POST': 
+        orderId = request.POST.get('orderId', '')
+        email = request.POST.get('email', '')
+
+        try:
+            order = Orders.objects.filter(order_id=orderId, email=email)
+            
+            if len(order) > 0:
+                update = OrderUpdate.objects.filter(order_id=orderId)
+                updates = []
+                
+                for item in update:
+                    updates.append({'text': item.update_desc, 'time': item.timestamp})
+                
+                response = json.dumps(updates, default=str)
+                return HttpResponse(response, content_type='application/json')
+            else:
+                # return HttpResponse('No such order found.', content_type='text/plain')
+                return HttpResponse({})
+        
+        except Exception as e:
+            return HttpResponse(f'Error: {str(e)}', content_type='text/plain')
+    
+    return render(request, 'shop/tracker.html')
