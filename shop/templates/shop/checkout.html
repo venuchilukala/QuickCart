@@ -7,75 +7,144 @@
     <div class="col-md-10 m-4">
         <h2>Step 1 : My Awesome Cart Express Checkout Review your Cart Items</h2>
         <div class="items">
-            <ol class="list-group list-group-numbered">
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">Subheading</div>
-                        Content for list item
-                    </div>
-                    <span class="badge text-bg-primary rounded-pill">14</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">Subheading</div>
-                        Content for list item
-                    </div>
-                    <span class="badge text-bg-primary rounded-pill">14</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">Subheading</div>
-                        Content for list item
-                    </div>
-                    <span class="badge text-bg-primary rounded-pill">14</span>
-                </li>
-            </ol>
+            <ol class="list-group list-group-numbered" id="checkoutItems"></ol>
+            <p id="emptyCheckoutMessage" style="display:none;">No items in your cart.</p>
         </div>
     </div>
-
+    <!-- Hidden data to use in JS -->
+    <div id="productsData" style="display:none;">
+        {% for product in products %}
+        <span data-product-id="{{ product.product_id }}" data-product-name="{{ product.product_name }}"
+            data-product-price="{{ product.price }}" data-product-image="{{product.image}}"
+            data-product-discount_price="{{product.discount_price}}"></span>
+        {% endfor %}
+    </div>
 
     <div class="col-md-10 m-4">
         <h2>Step 2 : Enter your Details</h2>
-        <form class="row g-3">
+        <form class="row g-3" action="/shop/checkout/" method="post">{% csrf_token %}
+            <input type="hidden" name="itemsJson" id="itemsJson">
             <div class="col-md-6">
-                <label for="inputName" class="form-label">Name</label>
-                <input type="name" class="form-control" id="inputName" placeholder="Name">
-            </div>
-            <div class="col-md-6">
-                <label for="inputEmail4" class="form-label">Email</label>
-                <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
-            </div>
-            <div class="col-12">
-                <label for="inputPhone" class="form-label">Phone Number</label>
-                <input type="tel" class="form-control" id="inputPhone">
-            </div>
-            <div class="col-12">
-                <label for="inputAddress" class="form-label">Address line 1</label>
-                <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-            </div>
-            <div class="col-12">
-                <label for="inputAddress2" class="form-label">Address line2</label>
-                <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Name">
             </div>
             <div class="col-md-6">
-                <label for="inputCity" class="form-label">City</label>
-                <input type="text" class="form-control" id="inputCity">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+            </div>
+            <div class="col-12">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="phone" name="phone">
+            </div>
+            <div class="col-12">
+                <label for="address1" class="form-label">Address line 1</label>
+                <input type="text" class="form-control" id="address1" name="address1" placeholder="1234 Main St" >
+            </div>
+            <div class="col-12">
+                <label for="address2" class="form-label">Address line2</label>
+                <input type="text" class="form-control" id="address2" name="address2" placeholder="Apartment, studio, or floor">
+            </div>
+            <div class="col-md-6">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" id="city" name="city">
             </div>
             <div class="col-md-4">
-                <label for="inputState" class="form-label">State</label>
-                <input type="text" class="form-control" id="inputState">
+                <label for="state" class="form-label">State</label>
+                <input type="text" class="form-control" id="state" name="state">
             </div>
             <div class="col-md-2">
-                <label for="inputZip" class="form-label">Zip</label>
-                <input type="text" class="form-control" id="inputZip">
+                <label for="zipcode" class="form-label">Zip</label>
+                <input type="text" class="form-control" id="zipcode" name="zipcode">
             </div>
-            
+
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Place Order</button>
             </div>
         </form>
     </div>
 </div>
+{% endblock %}
 
 
+{% block js %}
+<script>
+    function getCartFromLocalStorage() {
+        let cart = JSON.parse(localStorage.getItem('cart')) || {};
+        return cart;
+    }
+
+    // Parse product data from the hidden div
+    function getAllProducts() {
+        let products = [];
+        const productElements = document.querySelectorAll('#productsData span');
+        productElements.forEach(productEl => {
+            products.push({
+                product_id: productEl.getAttribute('data-product-id'),
+                product_name: productEl.getAttribute('data-product-name'),
+                price: productEl.getAttribute('data-product-price'),
+                discount_price: productEl.getAttribute('data-product-discount_price'),
+                image: productEl.getAttribute('data-product-image')
+            });
+        });
+        return products;
+    }
+
+
+    // Render the cart items dynamically
+    function renderCartItems() {
+        const cart = getCartFromLocalStorage();
+        const allProducts = getAllProducts();
+        const cartItemsContainer = document.getElementById('cartItemsContainer');
+        checkoutItems.innerHTML = '';
+
+        console.log(allProducts)
+        console.log(cart)
+
+        let cartHasItems = false;
+        let sum = 0 
+        for (let productId in cart) {
+            qty = cart[productId]
+            sum += qty
+            const product = allProducts.find(p => p.product_id === productId.slice(2,));
+            console.log(product)
+            if (product) {
+                cartHasItems = true;
+                prodId = `pr${productId}`    
+                const cartItemHTML = `<li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">${product.product_name}</div>
+                        MRP : ${product.discount_price}
+                    </div>
+                    <span class="badge text-bg-primary rounded-pill">${qty}</span>
+                </li>`
+                checkoutItems.innerHTML += cartItemHTML;
+            }
+        }
+        document.getElementById('cart').innerHTML = sum
+        document.getElementById('emptyCheckoutMessage').style.display = cartHasItems ? 'none' : 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        renderCartItems();
+    });
+
+    //Functionality of send date
+    $('#itemsJson').val(JSON.stringify(cart));
+
+    {% if thank %}
+        alert('Thanks for ordering with us. Your order ID is {{id}}. Use it to track your order using our order tracker.');
+        localStorage.clear();
+        document.location = "/shop";
+    {% endif %}
+
+    // var thank = {{ thank|yesno:"true,false" }};  
+    // if (thank) {
+    //     alert('Thanks for ordering with us. Your order ID is {{ id }}. Use it to track your order using our order tracker.');
+    //     localStorage.clear();
+    //     document.location = "/shop";
+    // }
+
+
+
+</script>
 {% endblock %}

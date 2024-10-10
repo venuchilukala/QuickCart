@@ -103,8 +103,10 @@
 
         let cartHasItems = false;
 
+        let sum = 0 
         for (let productId in cart) {
             qty = cart[productId]
+            sum += qty
             const product = allProducts.find(p => p.product_id === productId.slice(2,));
             // console.log(product)
             if (product) {
@@ -131,7 +133,7 @@
                 cartItemsContainer.innerHTML += cartItemHTML;
             }
         }
-
+        document.getElementById('cart').innerHTML = sum
         document.getElementById('emptyMessage').style.display = cartHasItems ? 'none' : 'block';
     }
 
