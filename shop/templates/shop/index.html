@@ -51,7 +51,7 @@
     margin: 20px 0;
   }
 
-  .pop-cart-list{
+  .pop-cart-list {
     font-size: 16px;
     font-weight: 500;
     list-style: auto;
@@ -70,12 +70,12 @@
   <h3>Flash Sale on {{product.0.category}} - Recommended Items 4U</h3>
   <div id="demo{{forloop.counter}}" class="carousel slide" data-bs-ride="carousel">
     <!-- Indicators -->
-    <ul class="carousel-indicators">
+    <!-- <ul class="carousel-indicators">
       <li data-bs-target="#demo{{forloop.counter}}" data-bs-slide-to="0" class="active"></li>
       {% for i in range %}
       <li data-bs-target="#demo{{forloop.counter}}" data-bs-slide-to="{{i}}"></li>
       {% endfor %}
-    </ul>
+    </ul> -->
 
     <!-- Carousel Inner -->
     <div class="carousel-inner no-padding">
@@ -90,11 +90,13 @@
               <div class="card-body">
                 <h5 class="card-title" id="namepr{{prod.product_id}}">{{prod.product_name}}</h5>
                 <p class="card-text">{{prod.desc|slice:'0:60'}}...</p>
-                <span id="divpr{{prod.product_id}}" class="divpr">
-                  <button id="pr{{prod.product_id}}" class="btn btn-primary cart">Add to Cart</button>
-                </span>
-                <a href="/shop/products/{{prod.product_id}}" id="pv{{prod.product_id}}"><button
-                    class="btn btn-primary cart">Preview</button></a>
+                <div class="d-flex justify-content-between">
+                  <span id="divpr{{prod.product_id}}" class="divpr">
+                    <button id="pr{{prod.product_id}}" class="btn btn-primary cart">Add to Cart</button>
+                  </span>
+                  <a href="/shop/products/{{prod.product_id}}" id="pv{{prod.product_id}}"><button
+                      class="btn btn-primary cart">Preview</button></a>
+                </div>
               </div>
             </div>
           </div>
@@ -156,90 +158,6 @@
     updateCart(cart)
   });
 
-  //Popover initialize
-  $(document).ready(function () {
-      // Initialize the popover
-      var popover = new bootstrap.Popover(document.getElementById('popcart'), {
-        trigger: 'manual', // Show popover manually
-        html: true, // Allow HTML content
-        placement: 'bottom'
-      });
-
-      // Show the popover when the button is clicked
-      $('#popcart').click(function () {
-        $('#popcart').popover('toggle'); // Toggle popover on click
-      });
-    });
-
-
-  //update popover
-  updatePopover(cart);
-  function updatePopover(cart) {
-    let popStr = '<h5 class="m-0">Cart Items:</h5> <ul>';
-      console.log(cart, "gfg")
-    for (let item in cart) {
-      let productName = document.getElementById('name' + item).innerText;
-      popStr += `<li class="pop-cart-list">${productName}: ${cart[item]}</li>`;
-    }
-    popStr += `</ul>
-        <a href="/shop/checkout">
-            <button class="btn btn-primary" id="checkout">Check out</button>
-        </a>
-        <button class="btn btn-danger" id="clearCart" onclick="clearCart()">Clear Cart</button>`;
-    document.getElementById('popcart').setAttribute('data-bs-content', popStr);
-    function updatePopover(cart) {
-    let popStr = '<h5 class="m-0">Cart Items:</h5> <ul>';
-    console.log(cart, "gfg"); // Debugging output
-    
-    for (let item in cart) {
-        // Ensure that the ID matches your product naming convention
-        let productName = document.getElementById('namepr' + item).innerText; 
-        popStr += `<li class="pop-cart-list">${productName}: ${cart[item]}</li>`;
-    }
-
-    popStr += `
-        </ul>
-        <a href="/shop/checkout">
-            <button class="btn btn-primary" id="checkout">Check out</button>
-        </a>
-        <button class="btn btn-danger" id="clearCart" onclick="clearCart()">Clear Cart</button>`;
-
-    // Set the content for the popover
-    document.getElementById('popcart').setAttribute('data-bs-content', popStr);
-
-    // Re-initialize the popover to ensure it updates with new content
-    var popover = new bootstrap.Popover(document.getElementById('popcart'), {
-        trigger: 'manual', // Show popover manually
-        html: true, // Allow HTML content
-        placement: 'bottom'
-    });
-
-    // Show the popover when the button is clicked
-    $('#popcart').popover('show'); // Automatically show popover after updating content
-}
-
-// Function to clear the cart
-function clearCart() {
-    cart = {}; // Reset cart object
-    localStorage.removeItem('cart'); // Clear local storage
-    document.getElementById('cart').innerHTML = '0'; // Reset cart count display
-    updateCart(cart); // Update cart UI
-    updatePopover(cart); // Update popover content
-}
-
-  }
-  
-
- function clearCart(){
-  cart = JSON.parse(localStorage.getItem('cart'))
-  for(let item in cart){
-    document.getElementById('div' + item).innerHTML = `<button id="${item}" class="btn btn-primary cart">Add to Cart</button>`
-  }
-  localStorage.clear()
-  cart = {}
-  updateCart(cart)
-  updatePopover
- }
 
   //Update the cart on every click
   function updateCart(cart) {
@@ -250,7 +168,6 @@ function clearCart() {
     }
     localStorage.setItem('cart', JSON.stringify(cart))
     document.getElementById('cart').innerHTML = sum
-    updatePopover(cart)
   }
 
   //Functionality for increment and decrement
@@ -260,6 +177,10 @@ function clearCart() {
     cart[a] = cart[a] - 1
     cart[a] = Math.max(0, cart[a])
     document.getElementById('val' + a).innerHTML = cart[a]
+    if(cart[a] === 0){
+      delete cart[a]
+      document.getElementById('div'+a).innerHTML = `<button id="pr${a}" class="btn btn-primary cart">Add to Cart</button>`
+    }
     updateCart(cart)
   });
 
@@ -272,6 +193,6 @@ function clearCart() {
   });
 
 
-  
+
 </script>
 {% endblock %}
