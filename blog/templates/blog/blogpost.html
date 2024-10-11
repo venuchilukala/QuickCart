@@ -19,21 +19,18 @@
             </h3>
 
             <article class="blog-post">
-                <h2 class="display-5 link-body-emphasis mb-1">Sample blog post</h2>
-                <p class="blog-post-meta">January 1, 2021 by <a href="#">Mark</a></p>
+                <h2 class="display-5 link-body-emphasis mb-1">{{post.title}}</h2>
+                <p class="blog-post-meta">January 1, 2021 by <a href="#">{{post.author}}</a></p>
         
                 
-                <h2>Heading</h2>
-                <p>This is some additional paragraph placeholder content. It has been written to fill the available
-                    space and show how a longer snippet of text affects the surrounding content. We'll repeat it often
-                    to keep the demonstration flowing, so be on the lookout for this exact same string of text.</p>
-                <h3>Sub-heading</h3>
-                <p>This is some additional paragraph placeholder content. It has been written to fill the available
-                    space and show how a longer snippet of text affects the surrounding content. We'll repeat it often
-                    to keep the demonstration flowing, so be on the lookout for this exact same string of text.</p>
-                <pre><code>Example code block</code></pre>
-                <p>This is some additional paragraph placeholder content. It's a slightly shorter version of the other
-                    highly repetitive body text used throughout.</p>
+                <h2>{{post.head0}}</h2>
+                <p>{{post.chead0}}</p>
+                
+                <h5>{{post.head1}}</h5>
+                <p>{{post.chead1}}</p>
+
+                <h5>{{post.head2}}</h5>
+                <p>{{post.chead2}}</p>
             </article>
 
 
