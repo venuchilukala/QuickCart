@@ -31,6 +31,7 @@ def about(request):
 
 
 def contact(request):
+    thank = False
     if request.method == 'POST': 
         name = request.POST.get('username', '')
         email = request.POST.get('useremail', '')
@@ -39,7 +40,8 @@ def contact(request):
         
         contact = Contact(name=name, email=email, phone=phone, desc=query)
         contact.save()
-    return render(request, 'shop/contact.html')
+        thank = True 
+    return render(request, 'shop/contact.html', {'thank' : thank})
 
 def search(request):
     return render(request, 'shop/search.html')

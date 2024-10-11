@@ -16,8 +16,12 @@
     width: 21%;
   }
 
-  body .carousel-indicators li {
-    background-color: blue;
+  .carousel-indicators{
+    margin-bottom: -25px;
+  }
+
+  .carousel-indicators [data-bs-target] {
+    background-color: rgb(165, 165, 170);
     list-style: none;
   }
 
@@ -67,15 +71,15 @@
 <div class="container my-5">
   <!-- Carousel Section -->
   {% for product, range, nSlides in allProds %}
-  <h3>Flash Sale on {{product.0.category}} - Recommended Items 4U</h3>
+  <h3 class="mt-5">Flash Sale on {{product.0.category}} - Recommended Items 4U</h3>
   <div id="demo{{forloop.counter}}" class="carousel slide" data-bs-ride="carousel">
     <!-- Indicators -->
-    <!-- <ul class="carousel-indicators">
+    <ul class="carousel-indicators">
       <li data-bs-target="#demo{{forloop.counter}}" data-bs-slide-to="0" class="active"></li>
       {% for i in range %}
       <li data-bs-target="#demo{{forloop.counter}}" data-bs-slide-to="{{i}}"></li>
       {% endfor %}
-    </ul> -->
+    </ul>
 
     <!-- Carousel Inner -->
     <div class="carousel-inner no-padding">
@@ -89,9 +93,9 @@
               <img src="/media/{{prod.image}}" class="card-img-top" alt="...">
               <div class="card-body">
                 <h5 class="card-title" id="namepr{{prod.product_id}}">{{prod.product_name}}</h5>
-                <p>Price : <span id="pricepr{{prod.product_id}}">{{prod.price}}</span></p>
-                <p>Discount Price : <span id="dpricepr{{prod.product_id}}">{{prod.discount_price}}</span></p>
-                <p class="card-text">{{prod.desc|slice:'0:60'}}...</p>
+                <p class="m-0">Price : <span id="pricepr{{prod.product_id}}">{{prod.price}}</span></p>
+                <p class="m-0">Discount Price : <span id="dpricepr{{prod.product_id}}">{{prod.discount_price}}</span></p>
+                <p class="card-text">{{prod.desc|slice:'0:50'}}...</p>
                 <div class="d-flex justify-content-between">
                   <span id="divpr{{prod.product_id}}" class="divpr">
                     <button id="pr{{prod.product_id}}" class="btn btn-primary cart">Add to Cart</button>
