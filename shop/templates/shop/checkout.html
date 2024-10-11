@@ -8,18 +8,11 @@
         <h2>Step 1 : My Awesome Cart Express Checkout Review your Cart Items</h2>
         <div class="items">
             <ol class="list-group list-group-numbered" id="checkoutItems"></ol>
+            <h3>Total Bill : <span id="totalBill">0</span></h3>
             <p id="emptyCheckoutMessage" style="display:none;">No items in your cart.</p>
         </div>
     </div>
-    <!-- Hidden data to use in JS -->
-    <div id="productsData" style="display:none;">
-        {% for product in products %}
-        <span data-product-id="{{ product.product_id }}" data-product-name="{{ product.product_name }}"
-            data-product-price="{{ product.price }}" data-product-image="{{product.image}}"
-            data-product-discount_price="{{product.discount_price}}"></span>
-        {% endfor %}
-    </div>
-
+    
     <div class="col-md-10 m-4">
         <h2>Step 2 : Enter your Details</h2>
         <form class="row g-3" action="/shop/checkout/" method="post">{% csrf_token %}
@@ -67,83 +60,45 @@
 
 
 {% block js %}
+
 <script>
-    function getCartFromLocalStorage() {
-        let cart = JSON.parse(localStorage.getItem('cart')) || {};
-        return cart;
-    }
 
-    // Parse product data from the hidden div
-    function getAllProducts() {
-        let products = [];
-        const productElements = document.querySelectorAll('#productsData span');
-        productElements.forEach(productEl => {
-            products.push({
-                product_id: productEl.getAttribute('data-product-id'),
-                product_name: productEl.getAttribute('data-product-name'),
-                price: productEl.getAttribute('data-product-price'),
-                discount_price: productEl.getAttribute('data-product-discount_price'),
-                image: productEl.getAttribute('data-product-image')
-            });
-        });
-        return products;
-    }
+let cart;
+  if (localStorage.getItem('cart') == null) {
+    cart = {}
+  }
+  else {
+    cart = JSON.parse(localStorage.getItem('cart'))
+  }
+  console.log(cart)
 
-
-    // Render the cart items dynamically
-    function renderCartItems() {
-        const cart = getCartFromLocalStorage();
-        const allProducts = getAllProducts();
-        const cartItemsContainer = document.getElementById('cartItemsContainer');
-        checkoutItems.innerHTML = '';
-
-        console.log(allProducts)
-        console.log(cart)
-
-        let cartHasItems = false;
-        let sum = 0 
-        for (let productId in cart) {
-            qty = cart[productId]
-            sum += qty
-            const product = allProducts.find(p => p.product_id === productId.slice(2,));
-            console.log(product)
-            if (product) {
-                cartHasItems = true;
-                prodId = `pr${productId}`    
-                const cartItemHTML = `<li class="list-group-item d-flex justify-content-between align-items-start">
+  let sum = 0 
+  let total = 0
+  let qty, name
+  for(let item in cart){
+    qty = cart[item][0]
+    name = cart[item][1] 
+    price = cart[item][2]
+    total += price * qty
+    sum += qty
+    const cartItemHTML = `<li class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
-                        <div class="fw-bold">${product.product_name}</div>
-                        MRP : ${product.discount_price}
+                        <div class="fw-bold">${name}</div>
                     </div>
                     <span class="badge text-bg-primary rounded-pill">${qty}</span>
                 </li>`
-                checkoutItems.innerHTML += cartItemHTML;
-            }
-        }
-        document.getElementById('cart').innerHTML = sum
-        document.getElementById('emptyCheckoutMessage').style.display = cartHasItems ? 'none' : 'block';
-    }
+    checkoutItems.innerHTML += cartItemHTML;
+  }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        renderCartItems();
-    });
+  document.getElementById('cart').innerHTML = sum
+  document.getElementById('totalBill').innerHTML = total
+  $('#itemsJson').val(JSON.stringify(cart));
 
-    //Functionality of send date
-    $('#itemsJson').val(JSON.stringify(cart));
-
-    {% if thank %}
+  {% if thank %}
         alert('Thanks for ordering with us. Your order ID is {{id}}. Use it to track your order using our order tracker.');
         localStorage.clear();
         document.location = "/shop";
     {% endif %}
-
-    // var thank = {{ thank|yesno:"true,false" }};  
-    // if (thank) {
-    //     alert('Thanks for ordering with us. Your order ID is {{ id }}. Use it to track your order using our order tracker.');
-    //     localStorage.clear();
-    //     document.location = "/shop";
-    // }
-
 
 
 </script>

@@ -77,9 +77,7 @@ def checkout(request):
         id = order.order_id
         return render(request, 'shop/checkout.html', {'thank':thank, 'id':id})
     
-    products = Product.objects.all()
-    params = {'products' : products,}
-    return render(request, 'shop/checkout.html', params)
+    return render(request, 'shop/checkout.html')
 
 
 def tracker(request):
@@ -89,7 +87,6 @@ def tracker(request):
 
         try:
             order = Orders.objects.filter(order_id=orderId, email=email)
-            
             if len(order) > 0:
                 update = OrderUpdate.objects.filter(order_id=orderId)
                 updates = []
@@ -97,8 +94,9 @@ def tracker(request):
                 for item in update:
                     updates.append({'text': item.update_desc, 'time': item.timestamp})
                 
-                response = json.dumps(updates, default=str)
+                response = json.dumps([updates, order[0].items_json], default=str)
                 return HttpResponse(response, content_type='application/json')
+                # return HttpResponse(response, order)
             else:
                 # return HttpResponse('No such order found.', content_type='text/plain')
                 return HttpResponse({})

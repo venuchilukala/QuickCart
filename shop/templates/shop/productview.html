@@ -7,9 +7,9 @@
 <div class="container my-5">
     <div class="row">
         <div class="col-md-6">
-            <img src="/media/{{product.image}}" alt="">
+            <img src="/media/{{product.image}}" alt="{{product.product_name}}" class="rounded">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 d-flex flex-column gap-3">
             <h3>{{product.product_name}}</h3>
             <p>{{product.desc}}</p>
             <strong>MRP : {{product.price}}/-</strong>
@@ -17,7 +17,6 @@
                 <button id="pr{{product.product_id}}" class="btn btn-primary cart">Add to Cart</button>
                 <button class="btn btn-success">Buy Now</button>
             </div>
-            <p>pr{{product.product_id}}</p>
         </div>
     </div>
 </div>
@@ -44,11 +43,16 @@
     var idStr = this.id.toString()
     console.log(idStr)
 
+    let qty , name 
     if(cart[idStr] != undefined){
-      cart[idStr] = cart[idStr] + 1
+      qty = cart[idStr][0] + 1 
+      name = 'my Item'
+      cart[idStr] = [qty, name]
     }
     else{
-      cart[idStr] = 1
+      qty = 1 
+      name = 'My Item'
+      cart[idStr] = [qty, name]
     }
 
     localStorage.setItem('cart', JSON.stringify(cart))
@@ -56,9 +60,17 @@
     console.log(cart)
   });
 
-  // document.querySelector('.cart').addEventListener('click', ()=>{
-  //   console.log('clicked')
-  // } )
+  function updateCart(cart) {
+    let sum = 0;
+    for (var item in cart) {
+      sum += cart[item][0]
+      document.getElementById('div' + item).innerHTML = "<button id='minus" + item + "' class='btn btn-light minus'>-</button> <span id='val" + item + "'>" + cart[item][0] + "</span><button id='plus" + item + "' class='btn btn-light plus'>+</button>";
+    }
+    localStorage.setItem('cart', JSON.stringify(cart))
+    document.getElementById('cart').innerHTML = sum
+  }
+
+ 
 
 </script>
 {% endblock %}

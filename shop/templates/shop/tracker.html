@@ -6,7 +6,7 @@
 <div class="container d-flex align-items-center flex-column">
     <div class="col-md-10 m-4">
         <h2>Enter your Order id and Email to track order</h2>
-        <form class="row g-3" action="#" method="post" id="trackerForm">{% csrf_token %}
+        <form class="row g-3" method="post" id="trackerForm">{% csrf_token %}
             <div class="col-md-6">
                 <label for="orderId" class="form-label">Order Id</label>
                 <input type="text" class="form-control" id="orderId" name="orderId" placeholder="Order Id">
@@ -23,8 +23,13 @@
 
 
     <div class="col-md-10 m-4">
-        <h2>Your order status</h2>
+        <h2>Your Order Status</h2>
         <ul class="list-group" id="items"></ul>
+    </div>
+
+    <div class="col-md-10 m-4">
+        <h2>Your Order Details</h2>
+        <ul class="list-group" id="citems"></ul>
     </div>
 
 
@@ -50,9 +55,8 @@
         })
             .done(function (data) {
                 console.log(data)
-                // updates = JSON.parse(data)
-                // console.log(updates)
-                updates = data
+                // data = JSON.parse(data)
+                updates = data[0]
                 if (updates.length > 0 && updates != {}) {
                     for (let i = 0; i < updates.length; i++) {
                         let text = updates[i]['text']
@@ -61,12 +65,31 @@
 
                         $('#items').append(mystr)
                     }
-                }else{
+                } else {
                     mystr = `<li class="list-group-item d-flex justify-content-between align-items-center">No order found</li>`
 
-                        $('#items').append(mystr)
+                    $('#items').append(mystr)
                 }
+
+                //Fill order details
+                cart = JSON.parse(data[1])
+                console.log(cart)
+                // let sum = 0 
+                for (let item in cart) {
+                    qty = cart[item][0]
+                    name = cart[item][1]
+                    // sum += qty
+                    const cartItemHTML = `<li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">${name}</div>
+                    </div>
+                    <span class="badge text-bg-primary rounded-pill">${qty}</span>
+                </li>`
+                    citems.innerHTML += cartItemHTML;
+                }
+
             })
+            // document.getElementById('cart').innerHTML = sum
         event.preventDefault()
     });
 
