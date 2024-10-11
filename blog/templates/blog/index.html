@@ -21,7 +21,7 @@
                     <h3 class="mb-0">{{blog.head0}}</h3>
                     <div class="mb-1 text-body-secondary">{{blog.pub_date}}</div>
                     <p class="card-text mb-auto">{{blog.chead0}}</p>
-                    <a href="#" class="icon-link gap-1 icon-link-hover stretched-link">
+                    <a href="blogpost/{{blog.post_id}}" class="icon-link gap-1 icon-link-hover stretched-link">
                         Continue reading
                         <svg class="bi">
                             <use xlink:href="#chevron-right"></use>
@@ -29,13 +29,6 @@
                     </a>
                 </div>
                 <div class="col-auto d-none d-lg-block">
-                    <!-- <svg src="/media/{{blog.thumbnail}}" class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"
-                        role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
-                        focusable="false">
-                        <title>Placeholder</title>
-                        <rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef"
-                            dy=".3em">Thumbnail</text>
-                    </svg> -->
                     <img src="/media/{{ blog.thumbnail }}" class="bd-placeholder-img" width="300" height="250" alt="Thumbnail" />
 
                 </div>
