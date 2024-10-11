@@ -5,7 +5,9 @@ from .models import Blogpost
 # Create your views here.
 
 def index(request):
-    return render(request, 'blog/index.html')
+    myblogs = Blogpost.objects.all()
+    print(myblogs)
+    return render(request, 'blog/index.html', {'myblogs' : myblogs})
 
 def blogpost(request, id):
     #We are cathing id which is send from urlpatterns
