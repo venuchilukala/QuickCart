@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import Product, Contact, Orders, OrderUpdate
 from math import ceil
 import json
+from django.views.decorators.csrf import csrf_exempt 
 
 # Create your views here.
 
@@ -25,10 +26,41 @@ def index(request):
     }
     return render(request, 'shop/index.html', params)
 
+def searchMatch(query, item):
+    ''' Return True only if search matches'''
+    if query in item.desc.lower() or query in item.product_name.lower() or query in item.category.lower() or query in item.subcategory.lower(): 
+        return True 
+    else:
+        return False
+
+def search(request):
+    query = request.GET.get('search')
+    allProds = []
+    catProds = Product.objects.values('category', 'product_id')
+    cats = {item['category']  for item in catProds}
+     
+    for cat in cats:
+        prodtemp = Product.objects.filter(category=cat)
+        prods = [item for item in prodtemp if searchMatch(query, item)]
+        n = len(prods)
+        nSlides = n//4 + ceil((n/4) - (n//4))
+        if n != 0:
+            allProds.append([prods, range(1, nSlides), nSlides])
+    
+    params = {
+        'allProds' : allProds,
+        'msg' : ''
+    }
+    
+    if len(allProds) == 0 or len(query) < 4:
+        params = {'msg' : 'Please make sure to enter relevent search query'}
+        
+    return render(request, 'shop/search.html', params)
+
+    
 
 def about(request):
     return render(request, 'shop/about.html')
-
 
 def contact(request):
     thank = False
@@ -43,9 +75,6 @@ def contact(request):
         thank = True 
     return render(request, 'shop/contact.html', {'thank' : thank})
 
-def search(request):
-    return render(request, 'shop/search.html')
-
 
 def productView(request, myid):
     product = Product.objects.filter(product_id = myid)
@@ -56,31 +85,6 @@ def cart(request):
     products = Product.objects.all()
     params = {'products' : products,}
     return render(request, 'shop/cart.html', params)
-
-def checkout(request):
-    if request.method == 'POST': 
-        items_json = request.POST.get('itemsJson','')
-        name = request.POST.get('name', '')
-        email = request.POST.get('email', '')
-        phone = request.POST.get('phone', '')
-        address1 = request.POST.get('address1', '')
-        address2 = request.POST.get('address2', '')
-        city = request.POST.get('city', '')
-        state = request.POST.get('state', '')
-        zip_code = request.POST.get('zipcode', '')
-        
-        #updating order along with order update
-        order = Orders(items_json=items_json, name=name, email=email, phone=phone, address=address1, address_2 = address2, state=state, city=city, zip_code=zip_code)
-        order.save()
-        #updating order here
-        update = OrderUpdate(order_id=order.order_id, update_desc='The order has been placed')
-        update.save()
-        thank = True
-        id = order.order_id
-        return render(request, 'shop/checkout.html', {'thank':thank, 'id':id})
-    
-    return render(request, 'shop/checkout.html')
-
 
 def tracker(request):
     if request.method == 'POST': 
@@ -107,3 +111,34 @@ def tracker(request):
             return HttpResponse(f'Error: {str(e)}', content_type='text/plain')
     
     return render(request, 'shop/tracker.html')
+
+def checkout(request):
+    if request.method == 'POST': 
+        items_json = request.POST.get('itemsJson','')
+        amount = request.POST.get('amount', '')
+        name = request.POST.get('name', '')
+        email = request.POST.get('email', '')
+        phone = request.POST.get('phone', '')
+        address1 = request.POST.get('address1', '')
+        address2 = request.POST.get('address2', '')
+        city = request.POST.get('city', '')
+        state = request.POST.get('state', '')
+        zip_code = request.POST.get('zipcode', '')
+        
+        #updating order along with order update
+        order = Orders(items_json=items_json, amount=amount, name=name, email=email, phone=phone, address=address1, address_2 = address2, state=state, city=city, zip_code=zip_code)
+        order.save()
+        #updating order here
+        update = OrderUpdate(order_id=order.order_id, update_desc='The order has been placed')
+        update.save()
+        thank = True
+        id = order.order_id
+        return render(request, 'shop/checkout.html', {'thank':thank, 'id':id})
+        # Request paytm to transfer the amount to merchent account
+    return render(request, 'shop/checkout.html')
+
+
+@csrf_exempt
+def handlerequest(request):
+    #paytm will send you payment request 
+    pass

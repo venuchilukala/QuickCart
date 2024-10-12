@@ -8,8 +8,8 @@ class Product(models.Model):
     category = models.CharField(max_length=50, default='')
     subcategory = models.CharField(max_length=50, default='')
     price = models.IntegerField(default=0)
-    discount_price = models.IntegerField(default=0)  # New field for discount price
-    brand = models.CharField(max_length=50, default='')  # New field for brand
+    discount_price = models.IntegerField(default=0)  
+    brand = models.CharField(max_length=50, default='')  
     desc = models.TextField()
     pub_date = models.DateField()
     image = models.ImageField(upload_to='shop/images', default='')
@@ -31,6 +31,7 @@ class Contact(models.Model):
 class Orders(models.Model):
     order_id = models.AutoField(primary_key=True)
     items_json = models.TextField()
+    amount = models.IntegerField(default=0)
     name = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
     phone = models.CharField(max_length=30)
