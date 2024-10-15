@@ -60,6 +60,18 @@
     font-weight: 500;
     list-style: auto;
   }
+
+  .divpr {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .divpr p{
+    margin: 0;
+    font-weight: 600;
+  }
+  
 </style>
 {% endblock %}
 
@@ -90,7 +102,10 @@
           {% for prod in product%}
           <div class="col-md-3">
             <div class="card" style="width: 18rem;">
-              <img src="/media/{{prod.image}}" class="card-img-top" alt="...">
+              <span>
+                <img id="imagepr{{prod.product_id}}" src="/media/{{prod.image}}" class="card-img-top"
+                  alt="{{prod.product_name}}">
+              </span>
               <div class="card-body">
                 <h5 class="card-title" id="namepr{{prod.product_id}}">{{prod.product_name}}</h5>
                 <p class="m-0">Price : <span id="pricepr{{prod.product_id}}">{{prod.price}}</span></p>
@@ -150,15 +165,12 @@
     updateCart(cart)
   }
 
-
-
-
   //Update the cart on every click
   function updateCart(cart) {
     let sum = 0;
     for (var item in cart) {
       sum += cart[item][0]
-      document.getElementById('div' + item).innerHTML = "<button id='minus" + item + "' class='btn btn-light minus'>-</button> <span id='val" + item + "'>" + cart[item][0] + "</span><button id='plus" + item + "' class='btn btn-light plus'>+</button>";
+      document.getElementById('div' + item).innerHTML = "<button id='minus" + item + "' class='btn btn-light minus'>-</button> <p id='val" + item + "'>" + cart[item][0] + "</p><button id='plus" + item + "' class='btn btn-light plus'>+</button>";
     }
     localStorage.setItem('cart', JSON.stringify(cart))
     document.getElementById('cart').innerHTML = sum
@@ -181,7 +193,8 @@
         name = document.getElementById('name' + idStr).innerHTML;
         price = document.getElementById('price' + idStr).innerHTML;
         d_price = document.getElementById('dprice' + idStr).innerHTML;
-        cart[idStr] = [qty, name, parseInt(price), parseInt(d_price)];
+        imageUrl = document.getElementById('image' + idStr).src;
+        cart[idStr] = [qty, name, parseInt(price), parseInt(d_price), imageUrl];
       }
       updateCart(cart);
     }

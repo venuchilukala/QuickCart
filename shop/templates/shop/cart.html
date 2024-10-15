@@ -67,15 +67,6 @@
         <a href="/shop/checkout/"><button class="btn btn-secondary">Check out</button></a>
     </div>
 </div>
-
-<!-- Hidden data to use in JS -->
-<div id="productsData" style="display:none;">
-    {% for product in products %}
-    <span data-product-id="{{ product.product_id }}" data-product-name="{{ product.product_name }}"
-        data-product-price="{{ product.price }}" data-product-image="{{product.image}}"
-        data-product-discount_price="{{product.discount_price}}"></span>
-    {% endfor %}
-</div>
 {% endblock %}
 
 {% block js %}
@@ -85,82 +76,37 @@
         return cart;
     }
 
-    // Parse product data from the hidden div
-    function getAllProducts() {
-        let products = [];
-        const productElements = document.querySelectorAll('#productsData span');
-        productElements.forEach(productEl => {
-            products.push({
-                product_id: productEl.getAttribute('data-product-id'),
-                product_name: productEl.getAttribute('data-product-name'),
-                price: productEl.getAttribute('data-product-price'),
-                discount_price: productEl.getAttribute('data-product-discount_price'),
-                image: productEl.getAttribute('data-product-image')
-            });
-        });
-        return products;
-    }
-
-
     // Render the cart items dynamically
     function renderCartItems() {
         const cart = getCartFromLocalStorage();
-        const allProducts = getAllProducts();
+        // const allProducts = getAllProducts();
         const cartItemsContainer = document.getElementById('cartItemsContainer');
         cartItemsContainer.innerHTML = '';
-
         let cartHasItems = false;
 
         let sum = 0
         let total = 0
-
-        // for (let item in cart) {
-        //     qty = cart[item][0]
-        //     name = cart[item][1]
-        //     price = cart[item][2]
-        //     dprice = cart[item][3]
-
-        //     const cartItemHTML = `
-        //             <li class="cart-item" data-product-id="${productId}">
-        //                 <img src="/media/${product.image}" alt="${product.product_name}" class="cart-image"/>
-        //                 <div>    
-        //                     <h3>${product.product_name}</h3>
-        //                     <p >Price: <span style="text-decoration:line-through">&#8377;${product.price}</span> &#8377;${product.discount_price}</p>
-        //                     <p>Quantity: ${cart[productId][0]}</p>
-        //                 </div>
-        //                 <span class="cartqty">
-        //                     <button class="cartItemIncr btn btn-light">-</button>
-        //                     <p class="m-0" id="cartItemVal">${cart[productId][0]}</p>
-        //                     <button class="cartItemDecr btn btn-light">+</button>
-        //                 </span>
-        //                 <span>
-        //                     <button class="cartItemDelete btn btn-danger">Delete</button>
-        //                 </span>
-        //             </li>
-        //             `;
-        // }
-
-        for (let productId in cart) {
-            qty = cart[productId][0]
-            price = cart[productId][3]
-            total += price * qty
+        for (let item in cart) {
+            id = item
+            qty = cart[item][0]
+            name = cart[item][1]
+            price = cart[item][2]
+            dprice = cart[item][3]
+            imageUrl = cart[item][4]
             sum += qty
-            const product = allProducts.find(p => p.product_id === productId.slice(2,));
-            // console.log(product)
-            if (product) {
-                cartHasItems = true;
-                prodId = `pr${productId}`
-                const cartItemHTML = `
-                    <li class="cart-item" data-product-id="${productId}">
-                        <img src="/media/${product.image}" alt="${product.product_name}" class="cart-image"/>
+            total += dprice
+
+            const cartItemHTML = `
+                    <li class="cart-item" data-product-id="${id}">
+                        <img src="${imageUrl}" alt="${name}" class="cart-image"/>
                         <div>    
-                            <h3>${product.product_name}</h3>
-                            <p >Price: <span style="text-decoration:line-through">&#8377;${product.price}</span> &#8377;${product.discount_price}</p>
-                            <p>Quantity: ${cart[productId][0]}</p>
+                            <h3>${name}</h3>
+                            <p >Price: <span style="text-decoration:line-through">&#8377;${price}</span> &#8377;${dprice}</p>
+                            <p>Quantity: ${qty}</p>
                         </div>
                         <span class="cartqty">
                             <button class="cartItemIncr btn btn-light">-</button>
-                            <p class="m-0" id="cartItemVal">${cart[productId][0]}</p>
+                            <p class="m-0" id="cartItemVal">${qty}</p>
                             <button class="cartItemDecr btn btn-light">+</button>
                         </span>
                         <span>
@@ -168,12 +114,12 @@
                         </span>
                     </li>
                     `;
-                cartItemsContainer.innerHTML += cartItemHTML;
-            }
+            cartItemsContainer.innerHTML += cartItemHTML;
         }
+
         document.getElementById('cart').innerHTML = sum
         document.getElementById('totalPrice').innerHTML = total
-        document.getElementById('emptyMessage').style.display = cartHasItems ? 'none' : 'block';
+        document.getElementById('emptyMessage').style.display = sum ? 'none' : 'block';
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -197,6 +143,8 @@
 
     // Update cart item quantity and refresh the view
     function updateCartItemQuantity(productId, change) {
+        console.log(productId)
+        console.log(change)
         const cart = getCartFromLocalStorage();
         if (cart[productId][0]) {
             cart[productId][0] += change;
