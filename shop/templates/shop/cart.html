@@ -112,10 +112,37 @@
         let cartHasItems = false;
 
         let sum = 0
-        let total = 0 
+        let total = 0
+
+        // for (let item in cart) {
+        //     qty = cart[item][0]
+        //     name = cart[item][1]
+        //     price = cart[item][2]
+        //     dprice = cart[item][3]
+
+        //     const cartItemHTML = `
+        //             <li class="cart-item" data-product-id="${productId}">
+        //                 <img src="/media/${product.image}" alt="${product.product_name}" class="cart-image"/>
+        //                 <div>    
+        //                     <h3>${product.product_name}</h3>
+        //                     <p >Price: <span style="text-decoration:line-through">&#8377;${product.price}</span> &#8377;${product.discount_price}</p>
+        //                     <p>Quantity: ${cart[productId][0]}</p>
+        //                 </div>
+        //                 <span class="cartqty">
+        //                     <button class="cartItemIncr btn btn-light">-</button>
+        //                     <p class="m-0" id="cartItemVal">${cart[productId][0]}</p>
+        //                     <button class="cartItemDecr btn btn-light">+</button>
+        //                 </span>
+        //                 <span>
+        //                     <button class="cartItemDelete btn btn-danger">Delete</button>
+        //                 </span>
+        //             </li>
+        //             `;
+        // }
+
         for (let productId in cart) {
             qty = cart[productId][0]
-            price = cart[productId][2]
+            price = cart[productId][3]
             total += price * qty
             sum += qty
             const product = allProducts.find(p => p.product_id === productId.slice(2,));
@@ -128,7 +155,7 @@
                         <img src="/media/${product.image}" alt="${product.product_name}" class="cart-image"/>
                         <div>    
                             <h3>${product.product_name}</h3>
-                            <p>Price: $${product.price}</p>
+                            <p >Price: <span style="text-decoration:line-through">&#8377;${product.price}</span> &#8377;${product.discount_price}</p>
                             <p>Quantity: ${cart[productId][0]}</p>
                         </div>
                         <span class="cartqty">

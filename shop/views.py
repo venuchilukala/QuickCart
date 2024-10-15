@@ -57,8 +57,6 @@ def search(request):
         
     return render(request, 'shop/search.html', params)
 
-    
-
 def about(request):
     return render(request, 'shop/about.html')
 
@@ -74,7 +72,6 @@ def contact(request):
         contact.save()
         thank = True 
     return render(request, 'shop/contact.html', {'thank' : thank})
-
 
 def productView(request, myid):
     product = Product.objects.filter(product_id = myid)
