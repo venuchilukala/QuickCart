@@ -8,21 +8,31 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 def index(request):    
-    allProds = []
-    #Getting all names of categories
-    catProds = Product.objects.values('category', 'product_id')
-    #Getting unique names of categories
-    cats = {item['category']  for item in catProds}
+    # allProds = []
+    # #Getting all names of categories
+    # catProds = Product.objects.values('category', 'product_id')
+    # #Getting unique names of categories
+    # cats = {item['category']  for item in catProds}
     
-    for cat in cats:
-        #Filtering products based on category
-        prods = Product.objects.filter(category=cat)
-        n = len(prods)
-        nSlides = n//4 + ceil((n/4) - (n//4))
-        allProds.append([prods, range(1, nSlides), nSlides])
+    # for cat in cats:
+    #     #Filtering products based on category
+    #     prods = Product.objects.filter(category=cat)
+    #     n = len(prods)
+    #     nSlides = n//4 + ceil((n/4) - (n//4))
+    #     allProds.append([prods, range(1, nSlides), nSlides])
+        
+    popularProds = []
     
+    allPopularProds = Product.objects.filter(category='popular')
+    n = len(allPopularProds)
+    nSlides = n//4 + ceil((n/4) - (n//4))
+    popularProds.append([allPopularProds, range(1, nSlides), nSlides])
+    
+    # TO get all products 
+    allProducts = Product.objects.all()
     params = {
-        'allProds' : allProds
+        'popularProds' : popularProds,
+        'allProducts' : allProducts
     }
     return render(request, 'shop/index.html', params)
 
@@ -34,25 +44,37 @@ def searchMatch(query, item):
         return False
 
 def search(request):
-    query = request.GET.get('search')
-    allProds = []
-    catProds = Product.objects.values('category', 'product_id')
-    cats = {item['category']  for item in catProds}
+    # query = request.GET.get('search')
+    # allProds = []
+    # catProds = Product.objects.values('category', 'product_id')
+    # cats = {item['category']  for item in catProds}
      
-    for cat in cats:
-        prodtemp = Product.objects.filter(category=cat)
-        prods = [item for item in prodtemp if searchMatch(query, item)]
-        n = len(prods)
-        nSlides = n//4 + ceil((n/4) - (n//4))
-        if n != 0:
-            allProds.append([prods, range(1, nSlides), nSlides])
+    # for cat in cats:
+    #     prodtemp = Product.objects.filter(category=cat)
+    #     # prodtemp = Product.objects.all()
+    #     prods = [item for item in prodtemp if searchMatch(query, item)]
+    #     n = len(prods)
+    #     nSlides = n//4 + ceil((n/4) - (n//4))
+    #     if n != 0:
+    #         allProds.append([prods, range(1, nSlides), nSlides])
     
+    # params = {
+    #     'allProds' : allProds,
+    #     'msg' : ''
+    # }
+    
+    query = request.GET.get('search')
+    
+    products = Product.objects.all()
+    allProducts = [item for item in products if searchMatch(query, item)]
+    print(allProducts)
     params = {
-        'allProds' : allProds,
+        'allProducts' : allProducts,
         'msg' : ''
     }
+    print(params)
     
-    if len(allProds) == 0 or len(query) < 4:
+    if len(allProducts) == 0 or len(query) < 4:
         params = {'msg' : 'Please make sure to enter relevent search query'}
         
     return render(request, 'shop/search.html', params)

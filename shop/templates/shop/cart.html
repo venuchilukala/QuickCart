@@ -56,15 +56,17 @@
 
 
 {% block body %}
-<h2>Your Cart</h2>
-<div id="cartItems">
-    <ul id="cartItemsContainer" class="cart-ul"></ul>
-    <p id="emptyMessage" style="display:none;">No items in your cart.</p>
-    <h3>Total Price : <span id="totalPrice"></span></h3>
+<div class="my-5">
+    <div id="cartItems">
+        <h2 class="m-3 text-start">Your Cart</h2>
+        <ul id="cartItemsContainer" class="cart-ul"></ul>
+        <p id="emptyMessage" style="display:none;">No items in your cart.</p>
+        <h3>Total Price : <span id="totalPrice"></span></h3>
 
-    <div class="d-flex gap-5">
-        <button id="clearcart" onclick="clearCart()" class="btn btn-danger">Clear Cart</button>
-        <a href="/shop/checkout/"><button class="btn btn-secondary">Check out</button></a>
+        <div class="d-flex gap-5">
+            <button id="clearcart" onclick="clearCart()" class="btn btn-danger">Clear Cart</button>
+            <a href="/shop/checkout/"><button class="btn btn-secondary">Check out</button></a>
+        </div>
     </div>
 </div>
 {% endblock %}

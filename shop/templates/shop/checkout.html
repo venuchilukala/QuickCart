@@ -3,59 +3,61 @@
 {% block title %} Checkout - My Awesome Cart {% endblock %}
 
 {% block body %}
-<div class="container d-flex align-items-center flex-column">
-    <div class="col-md-10 m-4">
-        <h2>Step 1 : My Awesome Cart Express Checkout Review your Cart Items</h2>
-        <div class="items">
-            <ol class="list-group list-group-numbered" id="checkoutItems"></ol>
-            <h3>Total Bill : <span id="totalBill">0</span></h3>
-            <p id="emptyCheckoutMessage" style="display:none;">No items in your cart.</p>
+<div class="my-5">
+    <div class="container d-flex align-items-center flex-column">
+        <div class="col-md-10 m-4">
+            <h2>Step 1 : My Awesome Cart Express Checkout Review your Cart Items</h2>
+            <div class="items">
+                <ol class="list-group list-group-numbered" id="checkoutItems"></ol>
+                <h3>Total Bill : <span id="totalBill">0</span></h3>
+                <p id="emptyCheckoutMessage" style="display:none;">No items in your cart.</p>
+            </div>
         </div>
-    </div>
-
-    <div class="col-md-10 m-4">
-        <h2>Step 2 : Enter your Details</h2>
-        <form class="row g-3" action="/shop/checkout/" method="post">{% csrf_token %}
-            <input type="hidden" name="itemsJson" id="itemsJson">
-            <input type="hidden" name="amount" id="amount">
-            <div class="col-md-6">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Name">
-            </div>
-            <div class="col-md-6">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
-            </div>
-            <div class="col-12">
-                <label for="phone" class="form-label">Phone Number</label>
-                <input type="tel" class="form-control" id="phone" name="phone">
-            </div>
-            <div class="col-12">
-                <label for="address1" class="form-label">Address line 1</label>
-                <input type="text" class="form-control" id="address1" name="address1" placeholder="1234 Main St">
-            </div>
-            <div class="col-12">
-                <label for="address2" class="form-label">Address line2</label>
-                <input type="text" class="form-control" id="address2" name="address2"
-                    placeholder="Apartment, studio, or floor">
-            </div>
-            <div class="col-md-6">
-                <label for="city" class="form-label">City</label>
-                <input type="text" class="form-control" id="city" name="city">
-            </div>
-            <div class="col-md-4">
-                <label for="state" class="form-label">State</label>
-                <input type="text" class="form-control" id="state" name="state">
-            </div>
-            <div class="col-md-2">
-                <label for="zipcode" class="form-label">Zip</label>
-                <input type="text" class="form-control" id="zipcode" name="zipcode">
-            </div>
-
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Place Order</button>
-            </div>
-        </form>
+    
+        <div class="col-md-10 m-4">
+            <h2>Step 2 : Enter your Details</h2>
+            <form class="row g-3" action="/shop/checkout/" method="post">{% csrf_token %}
+                <input type="hidden" name="itemsJson" id="itemsJson">
+                <input type="hidden" name="amount" id="amount">
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+                </div>
+                <div class="col-md-6">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+                </div>
+                <div class="col-12">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" id="phone" name="phone">
+                </div>
+                <div class="col-12">
+                    <label for="address1" class="form-label">Address line 1</label>
+                    <input type="text" class="form-control" id="address1" name="address1" placeholder="1234 Main St">
+                </div>
+                <div class="col-12">
+                    <label for="address2" class="form-label">Address line2</label>
+                    <input type="text" class="form-control" id="address2" name="address2"
+                        placeholder="Apartment, studio, or floor">
+                </div>
+                <div class="col-md-6">
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" name="city">
+                </div>
+                <div class="col-md-4">
+                    <label for="state" class="form-label">State</label>
+                    <input type="text" class="form-control" id="state" name="state">
+                </div>
+                <div class="col-md-2">
+                    <label for="zipcode" class="form-label">Zip</label>
+                    <input type="text" class="form-control" id="zipcode" name="zipcode">
+                </div>
+    
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Place Order</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}

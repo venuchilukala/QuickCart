@@ -2,20 +2,29 @@
 
 {% block title %} Product View {% endblock %}
 
+{% block css %}
+<style>
+  .top {
+    margin-top: 7rem
+  }
+</style>
+{% endblock %}
+
 {% block body %}
 
-<div class="container my-5">
+<div class="container top">
   <div class="row">
     <div class="col-md-6">
-      <img src="/media/{{product.image}}" alt="{{product.product_name}}" class="rounded">
+      <img id="imagepvpr{{product.product_id}}" src="/media/{{product.image}}" alt="{{product.product_name}}" class="rounded">
     </div>
     <div class="col-md-6 d-flex flex-column gap-3">
       <h3 id="namepvpr{{product.product_id}}">{{product.product_name}}</h3>
       <p>{{product.desc}}</p>
-      <strong>MRP : <span id="pricepvpr{{product.product_id}}">{{product.price}}</span>/-</strong>
-      <strong>Offer Price : <span id="dpricepvpr{{product.product_id}}">{{product.discount_price}}</span>/-</strong>
-      <div>
-        <span id="spanpr{{product.product_id}}" class="spanpr">
+      <strong class="text-decoration-line-through">MRP : <span
+          id="pricepvpr{{product.product_id}}">{{product.price}}</span>/-</strong>
+      <h3>&#8377; <span id="dpricepvpr{{product.product_id}}">{{product.discount_price}}</span></h3>
+      <div class="d-flex gap-5">
+        <span id="spanpr{{product.product_id}}" class="spanpr d-flex align-items-center fw-bold gap-1">
           <button id="pr{{product.product_id}}" class="btn btn-primary cart">Add to Cart</button>
         </span>
         <a href="/shop/cart/"><button class="btn btn-success">Buy Now</button></a>
@@ -37,6 +46,7 @@
   else {
     cart = JSON.parse(localStorage.getItem('cart'))
     updateCart(cart)
+    console.log(cart)
   }
 
   function updateCart(cart) {
@@ -45,7 +55,7 @@
       sum += cart[item][0];
       const spanElement = document.getElementById('span' + item);
       if (spanElement) {
-        spanElement.innerHTML = "<button id='pvminus" + item + "' class='btn btn-light pvminus'>-</button> <span id='pvval" + item + "'>" + cart[item][0] + "</span><button id='pvplus" + item + "' class='btn btn-light pvplus'>+</button>";
+        spanElement.innerHTML = "<button id='pvminus" + item + "' class='btn btn-light pvminus'>-</button> <p class='m-0' id='pvval" + item + "'>" + cart[item][0] + "</p><button id='pvplus" + item + "' class='btn btn-light pvplus'>+</button>";
       }
     }
     console.log(cart)
@@ -67,10 +77,9 @@
         qty = 1;
         name = document.getElementById('namepv' + idStr).innerHTML;
         price = document.getElementById('pricepv' + idStr).innerHTML;
-        console.log("p", price)
         d_price = document.getElementById('dpricepv' + idStr).innerHTML;
-        console.log("dp :", d_price)
-        cart[idStr] = [qty, name, parseInt(price), parseInt(d_price)];
+        imageUrl = document.getElementById('imagepv' + idStr).src;
+        cart[idStr] = [qty, name, parseInt(price), parseInt(d_price), imageUrl];
       }
       updateCart(cart);
     }
