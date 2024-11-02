@@ -1,28 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Product, Contact, Orders, OrderUpdate
 from math import ceil
 import json
-from django.views.decorators.csrf import csrf_exempt 
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, logout 
 
 # Create your views here.
 
-def index(request):    
-    # allProds = []
-    # #Getting all names of categories
-    # catProds = Product.objects.values('category', 'product_id')
-    # #Getting unique names of categories
-    # cats = {item['category']  for item in catProds}
-    
-    # for cat in cats:
-    #     #Filtering products based on category
-    #     prods = Product.objects.filter(category=cat)
-    #     n = len(prods)
-    #     nSlides = n//4 + ceil((n/4) - (n//4))
-    #     allProds.append([prods, range(1, nSlides), nSlides])
-        
+def index(request):        
     popularProds = []
-    
     allPopularProds = Product.objects.filter(category='popular')
     n = len(allPopularProds)
     nSlides = n//4 + ceil((n/4) - (n//4))
@@ -139,3 +126,36 @@ def checkout(request):
     return render(request, 'shop/checkout.html')
 
 
+# Authentication views
+
+def register_view(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('/')
+            
+    else:
+        initial_data = {'username' : '', 'password1' :'', 'password2' : ''}
+        form = UserCreationForm(initial=initial_data)
+    
+    return render(request, 'auth/register.html', {'form' : form})
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('/')
+            
+    else:
+        initial_data = {'username' : '', 'password' :''}
+        form = AuthenticationForm(initial=initial_data)
+    
+    return render(request, 'auth/login.html', {'form' : form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
