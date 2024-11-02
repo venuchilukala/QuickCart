@@ -44,27 +44,7 @@ def searchMatch(query, item):
         return False
 
 def search(request):
-    # query = request.GET.get('search')
-    # allProds = []
-    # catProds = Product.objects.values('category', 'product_id')
-    # cats = {item['category']  for item in catProds}
-     
-    # for cat in cats:
-    #     prodtemp = Product.objects.filter(category=cat)
-    #     # prodtemp = Product.objects.all()
-    #     prods = [item for item in prodtemp if searchMatch(query, item)]
-    #     n = len(prods)
-    #     nSlides = n//4 + ceil((n/4) - (n//4))
-    #     if n != 0:
-    #         allProds.append([prods, range(1, nSlides), nSlides])
-    
-    # params = {
-    #     'allProds' : allProds,
-    #     'msg' : ''
-    # }
-    
     query = request.GET.get('search')
-    
     products = Product.objects.all()
     allProducts = [item for item in products if searchMatch(query, item)]
     print(allProducts)
@@ -159,7 +139,3 @@ def checkout(request):
     return render(request, 'shop/checkout.html')
 
 
-@csrf_exempt
-def handlerequest(request):
-    #paytm will send you payment request 
-    pass
