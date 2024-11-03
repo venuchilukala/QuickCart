@@ -12,5 +12,7 @@ urlpatterns = [
     path('checkout/', views.checkout, name='Checkout'),
     path('register/', views.register_view, name='register'),
     path('login/', views.login_view, name='login'),
-    path('logout/', views.logout_view, name='logout')
+    path('logout/', views.logout_view, name='logout'),
+    path('blog/', views.blog, name='blog'),
+    path('blogpost/<int:id>', views.blogpost, name='blogpost')
 ]

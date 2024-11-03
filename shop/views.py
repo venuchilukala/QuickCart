@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from .models import Product, Contact, Orders, OrderUpdate
+from .models import Product, Contact, Orders, OrderUpdate, Blog
 from math import ceil
 import json
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -169,3 +169,19 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+
+# Blog Views 
+@auth
+def blog(request):
+    myblogs = Blog.objects.all()
+    print(myblogs)
+    return render(request, 'blog/blog.html', {'myblogs' : myblogs})
+
+@auth
+def blogpost(request, id):
+    #We are cathing id which is send from urlpatterns
+    # we [0] because to get 'About Myself' from <QuerySet [<Blogpost: About Myself>]>
+    # Then filtered post will be catched in blogpost.html
+    post = Blog.objects.filter(post_id = id)[0]
+    return render(request, 'blog/blogpost.html', {'post' : post})

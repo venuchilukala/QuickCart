@@ -9,7 +9,6 @@
             <h2 class="mb-4">Step 1 : Review your Cart Items</h2>
             <div class="col-md-5 col-lg-4 order-md-last">
                 <ol class="list-group list-group-numbered mb-3" id="checkoutItems"></ol>
-                <!-- <p id="emptyCheckoutMessage" style="display:none;" class="text-danger font-bold">No items in your cart.</p> -->
                 <ul id="totalBillSection">
                     <li class="list-group-item d-flex justify-content-between">
                         <span><strong>Total Bill:</strong></span>
@@ -27,7 +26,7 @@
 
         <div class="col-md-10 m-4">
             <h2>Step 2 : Enter your Details</h2>
-            <form class="row g-3" action="/shop/checkout/" method="post">{% csrf_token %}
+            <form class="row g-3" action="/checkout/" method="post">{% csrf_token %}
                 <input type="hidden" name="itemsJson" id="itemsJson">
                 <input type="hidden" name="amount" id="amount">
                 <div class="col-md-6">
@@ -75,7 +74,7 @@
     <div class="container d-none p-5" id="noItems">
         <div class="d-flex flex-column justify-content-center align-items-center">
             <h3 >No items in cart</h3>
-            <a href="/shop" class="btn btn-secondary text-white">Add Items</a>
+            <a href="/" class="btn btn-secondary text-white">Add Items</a>
         </div>
     </div>
 </div>
@@ -125,23 +124,12 @@
     {% if thank %}
     alert('Thanks for ordering with us. Your order ID is {{id}}. Use it to track your order using our order tracker.');
     localStorage.clear();
-    document.location = "/shop";
+    document.location = "/";
     {% endif %}
 
     $('#amount').val($('#totalBill').html())
 
     document.getElementById('checkoutSection').classList.toggle('d-none', sum === 0)
     document.getElementById('noItems').classList.toggle('d-none', sum !== 0)
-    // // toggleCheckout = document.getElementById('checkoutSection')
-    // // toggleNoitems = document.getElementById('noItems')
-
-    // // sum ? toggleCheckout.clasList.toggle('d-none') : toggleNoitems.clasList.toggle('d-none')
-
-    // if (sum === 0) {
-    //     document.getElementById('emptyCheckoutMessage').style.display = 'block';
-    // } else {
-    //     document.getElementById('emptyCheckoutMessage').style.display = 'none';
-    // }
-
 </script>
 {% endblock %}
