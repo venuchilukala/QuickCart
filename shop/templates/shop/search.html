@@ -94,7 +94,7 @@
                         <span id="divpr{{prod.product_id}}" class="divpr">
                             <button id="pr{{prod.product_id}}" class="btn btn-primary cart">Add to Cart</button>
                         </span>
-                        <a href="/shop/products/{{prod.product_id}}" id="pv{{prod.product_id}}">
+                        <a href="/products/{{prod.product_id}}" id="pv{{prod.product_id}}">
                             <button class="btn btn-primary cart">Preview</button>
                         </a>
                     </div>
@@ -201,16 +201,15 @@
         let qty, name, price, d_price
         if (cart[idStr] != undefined) {
             qty = cart[idStr][0] + 1
-            // name = 'My item'
-            // cart[idStr] = cart[idStr] + 1
-            // cart[idStr] = [qty, name]
+            
         }
         else {
             qty = 1
             name = document.getElementById('name' + idStr).innerHTML
             price = document.getElementById('price' + idStr).innerHTML
             d_price = document.getElementById('dprice' + idStr).innerHTML
-            cart[idStr] = [qty, name, parseInt(price), parseInt(d_price)]
+            imageUrl = document.getElementById('image' + idStr).src;
+            cart[idStr] = [qty, name, parseInt(price), parseInt(d_price), imageUrl]
         }
         updateCart(cart)
     });

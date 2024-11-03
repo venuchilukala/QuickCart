@@ -26,12 +26,15 @@
   }
 
   .carousel-indicators .active {
-    background-color: blue;
+    background-color: #696974;
   }
 
   body .carousel-control-prev-icon,
   body .carousel-control-next-icon {
-    background-color: blue;
+    background-color: #696974;
+    height: 53px;
+    border-radius: 5px;
+    margin: 20px;
   }
 
   body .carousel-control-next {
@@ -119,14 +122,14 @@
 
 {% block body%}
 <!-- banner image -->
-<div class="row">
+<div class="row mt-5">
   <img src="{% static '/shop/b.png'%}" alt="banner" class="img-fluid banner-img">
 </div>
 
 <div class="my-3">
   <!-- Carousel Section -->
   {% for popular, range, nSlides in popularProds %}
-  <h3>Flash Sale on {{popular.0.category}} - Recommended Items 4U</h3>
+  <h3 class="mx-5">Flash Sale on {{popular.0.category}} - Recommended Items 4U</h3>
   <div id="demo{{forloop.counter}}" class="carousel slide" data-bs-ride="carousel">
     <!-- Indicators -->
     <ul class="carousel-indicators">
@@ -190,7 +193,7 @@
     {% for prod in allProducts %}
     <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
       <div class="card h-100 card-container shadow">
-        <a href="/shop/products/{{prod.product_id}}" class="card-link text-dark" style="text-decoration: none;">
+        <a href="/products/{{prod.product_id}}" class="card-link text-dark" style="text-decoration: none;">
           <div class="card-img-div">
             <img id="imagepr{{prod.product_id}}" src="/media/{{prod.image}}" class="card-img-top card-img"
               alt="{{prod.product_name}}">

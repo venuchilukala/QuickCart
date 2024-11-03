@@ -175,7 +175,6 @@ def logout_view(request):
 @auth
 def blog(request):
     myblogs = Blog.objects.all()
-    print(myblogs)
     return render(request, 'blog/blog.html', {'myblogs' : myblogs})
 
 @auth
