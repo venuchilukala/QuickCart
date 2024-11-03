@@ -5,9 +5,11 @@ from math import ceil
 import json
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout 
+from .middlewares import auth, guest
 
 # Create your views here.
 
+@auth
 def index(request):        
     popularProds = []
     allPopularProds = Product.objects.filter(category='popular')
@@ -46,9 +48,11 @@ def search(request):
         
     return render(request, 'shop/search.html', params)
 
+@auth
 def about(request):
     return render(request, 'shop/about.html')
 
+@auth
 def contact(request):
     thank = False
     if request.method == 'POST': 
@@ -62,16 +66,19 @@ def contact(request):
         thank = True 
     return render(request, 'shop/contact.html', {'thank' : thank})
 
+@auth
 def productView(request, myid):
     product = Product.objects.filter(product_id = myid)
     
     return render(request, 'shop/productView.html', {'product' : product[0]})
 
+@auth
 def cart(request):
     products = Product.objects.all()
     params = {'products' : products,}
     return render(request, 'shop/cart.html', params)
 
+@auth
 def tracker(request):
     if request.method == 'POST': 
         orderId = request.POST.get('orderId', '')
@@ -100,6 +107,7 @@ def tracker(request):
     
     return render(request, 'shop/tracker.html')
 
+@auth
 def checkout(request):
     if request.method == 'POST': 
         items_json = request.POST.get('itemsJson','')
@@ -128,6 +136,7 @@ def checkout(request):
 
 # Authentication views
 
+@guest
 def register_view(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -142,6 +151,7 @@ def register_view(request):
     
     return render(request, 'auth/register.html', {'form' : form})
 
+@guest
 def login_view(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)

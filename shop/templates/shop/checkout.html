@@ -4,16 +4,27 @@
 
 {% block body %}
 <div class="my-5">
-    <div class="container d-flex align-items-center flex-column">
+    <div class="container d-flex align-items-center flex-column" id="checkoutSection">
         <div class="col-md-10 m-4">
-            <h2>Step 1 : My Awesome Cart Express Checkout Review your Cart Items</h2>
-            <div class="items">
-                <ol class="list-group list-group-numbered" id="checkoutItems"></ol>
-                <h3>Total Bill : <span id="totalBill">0</span></h3>
-                <p id="emptyCheckoutMessage" style="display:none;">No items in your cart.</p>
+            <h2 class="mb-4">Step 1 : Review your Cart Items</h2>
+            <div class="col-md-5 col-lg-4 order-md-last">
+                <ol class="list-group list-group-numbered mb-3" id="checkoutItems"></ol>
+                <!-- <p id="emptyCheckoutMessage" style="display:none;" class="text-danger font-bold">No items in your cart.</p> -->
+                <ul id="totalBillSection">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span><strong>Total Bill:</strong></span>
+                        <strong>&#8377;<strong id="totalBill">0</strong></strong>
+                    </li>
+                </ul>
+                <!-- <form class="card p-2">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Promo code">
+                        <button type="submit" class="btn btn-secondary">Redeem</button>
+                    </div>
+                </form> -->
             </div>
         </div>
-    
+
         <div class="col-md-10 m-4">
             <h2>Step 2 : Enter your Details</h2>
             <form class="row g-3" action="/shop/checkout/" method="post">{% csrf_token %}
@@ -52,11 +63,19 @@
                     <label for="zipcode" class="form-label">Zip</label>
                     <input type="text" class="form-control" id="zipcode" name="zipcode">
                 </div>
-    
+
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary">Place Order</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+
+    <div class="container d-none p-5" id="noItems">
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <h3 >No items in cart</h3>
+            <a href="/shop" class="btn btn-secondary text-white">Add Items</a>
         </div>
     </div>
 </div>
@@ -85,12 +104,17 @@
         price = cart[item][3]
         total += price * qty
         sum += qty
-        const cartItemHTML = `<li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">${name}</div>
-                    </div>
-                    <span class="badge text-bg-primary rounded-pill">${qty}</span>
-                </li>`
+        const cartItemHTML = `
+                     <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                        <h6 class="my-0">${name}</h6>
+                    
+                        </div>
+                        <span class="text-body-secondary">${price}</span>
+                        <span>
+                        <span class="badge bg-primary rounded-pill">${qty}</span>
+                        </span>
+                    </li>`
         checkoutItems.innerHTML += cartItemHTML;
     }
 
@@ -105,6 +129,19 @@
     {% endif %}
 
     $('#amount').val($('#totalBill').html())
+
+    document.getElementById('checkoutSection').classList.toggle('d-none', sum === 0)
+    document.getElementById('noItems').classList.toggle('d-none', sum !== 0)
+    // // toggleCheckout = document.getElementById('checkoutSection')
+    // // toggleNoitems = document.getElementById('noItems')
+
+    // // sum ? toggleCheckout.clasList.toggle('d-none') : toggleNoitems.clasList.toggle('d-none')
+
+    // if (sum === 0) {
+    //     document.getElementById('emptyCheckoutMessage').style.display = 'block';
+    // } else {
+    //     document.getElementById('emptyCheckoutMessage').style.display = 'none';
+    // }
 
 </script>
 {% endblock %}
